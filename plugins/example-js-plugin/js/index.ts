@@ -1,8 +1,6 @@
+
 export default plugin({
-	start() {
-		console.log('[js-plugin] started')
-	},
-	stop() {
-		console.log('[js-plugin] stopped')
-	},
-})
+  start({ logger }) {
+    logger.log("Tsundere plugin loaded! 💢");
+  },
+});

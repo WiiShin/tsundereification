@@ -1,14 +1,14 @@
 
 {
   "format": 1,
-  "id": "dev.tsundere.message-transformer",
+  "id": "dev.tsundere.messages",
   "name": "Tsundere Messages",
+  "description": "Turns your outgoing messages into tsundere-style speech.",
   "author": "You",
-  "description": "Turns your outgoing messages into tsundere speech.",
   "version": "1.0.0",
   "dependencies": {
     "revenge.api": {
-      "version": ">=1"
+      "version": ">=1 <2"
     },
     "discord": {
       "version": "*"

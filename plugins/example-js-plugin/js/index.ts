@@ -265,16 +265,7 @@ function tsundereifyMax(text, settings = {}) {
     result += pick([" 💢", " 😡", " 🤬"]);
   }
 
-  // Restore URLs and inline code exactly.
-  result = result.replace(
-    /\uE000(\d+)\uE001/g,
-    (_, id) => protectedParts[Number(id)]
-  );
-
-  return result;
-      }
-
-// GENERAL TSUNDERE TEXT TRANSFORMATIONS
+  // GENERAL TSUNDERE TEXT TRANSFORMATIONS
   // Adds variety throughout your message, not just at the edges.
 
   const generalPick = (arr) =>
@@ -428,14 +419,6 @@ function tsundereifyMax(text, settings = {}) {
         return `${punctuation}${firstChar}-${firstChar}${rest}`;
       });
     }
-      if (generalChance(s.stutter * 0.3) && pattern.test(result)) {
-        pattern.lastIndex = 0;
-        result = result.replace(pattern, replacement);
-        quirksApplied++;
-      }
-      pattern.lastIndex = 0;
-    }
-
     // General reactions embedded in the text, not just at the start/end.
     const insertions = [
       " (w-wait)",
@@ -524,8 +507,49 @@ function tsundereifyMax(text, settings = {}) {
     }
       }
 
+  // Restore URLs and inline code exactly after every transformation has run.
+  result = result.replace(
+    /\uE000(\d+)\uE001/g,
+    (_, id) => protectedParts[Number(id)]
+  );
+
+  return result;
+}
+
 export default plugin({
-  start({ logger }) {
+  start({ logger, cleanup }) {
     logger.log("Tsundere Messages loaded 💢");
+
+    // Intercept outgoing messages and transform their text before Discord sends them.
+    cleanup(
+      getModules(withProps("sendMessage"), (module) => {
+        const target =
+          module?.default && typeof module.default.sendMessage === "function"
+            ? module.default
+            : module;
+        if (!target || typeof target.sendMessage !== "function") return;
+
+        cleanup(
+          before(target, "sendMessage", (args) => {
+            const message = args[1];
+
+            if (typeof message === "string") {
+              args[1] = tsundereifyMax(message);
+            } else if (
+              message &&
+              typeof message === "object" &&
+              typeof message.content === "string"
+            ) {
+              args[1] = {
+                ...message,
+                content: tsundereifyMax(message.content),
+              };
+            }
+
+            return args;
+          })
+        );
+      })
+    );
   },
 });

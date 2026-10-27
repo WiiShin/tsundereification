@@ -48,7 +48,7 @@ jobs:
 
       - name: Build plugins
         if: steps.plan.outputs.count != '0'
-        run: ./gradlew --no-daemon packageAllPlugins
+        run: ./gradlew --no-daemon packageExampleJsPlugin
         env:
           GITHUB_TOKEN: ${{ secrets.READ_PACKAGES_TOKEN }} # For Gradle to download the API dependency.
 

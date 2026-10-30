@@ -1,6 +1,7 @@
-import { before } from "@revenge-mod/patcher";
-import { getModules } from "@revenge-mod/modules/finders";
-import { withProps } from "@revenge-mod/modules/finders/filters";
+import { before } from "@valenced/patcher";
+import { getModules } from "@valenced/modules/finders";
+import { withProps } from "@valenced/modules/finders/filters";
+
 
 function tsundereifyMax(text, settings = {}) {
   const s = {
